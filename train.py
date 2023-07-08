@@ -111,6 +111,7 @@ def main():
     d_scaler = torch.cuda.amp.GradScaler()
 
     for epoch in range(config.NUM_EPOCHS):
+        print(f"Epoch [{epoch}/{config.NUM_EPOCHS}]")
         train_fn(
             disc,
             gen,
@@ -123,11 +124,12 @@ def main():
             g_scaler,
         )
 
-        if config.SAVE_MODEL:
-            save_checkpoint(gen, opt_gen, filename=config.CHECKPOINT_GEN)
-            save_checkpoint(disc, opt_disc, filename=config.CHECKPOINT_DISC)
+        if epoch % 10 == 0:
+            if config.SAVE_MODEL:
+                save_checkpoint(gen, opt_gen, filename=config.CHECKPOINT_GEN)
+                save_checkpoint(disc, opt_disc, filename=config.CHECKPOINT_DISC)
 
-        save_some_examples(gen, val_loader, epoch, folder="evaluation")
+            save_some_examples(gen, val_loader, epoch, folder="evaluation")
 
 
 if __name__ == "__main__":
